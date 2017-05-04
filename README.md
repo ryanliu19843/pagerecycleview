@@ -6,7 +6,8 @@
 
 
 ## 实现效果
-
+ 
+![图片](https://github.com/ryanliu19843/pagerecycleview/blob/master/ezgif-2-052447.gif)
 
 ## 实现代码
 ### 如果使用我实现的服务器数据交互框架实现方式如下
