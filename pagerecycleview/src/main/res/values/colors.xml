@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <color name="A">#ff0000ff</color>
+    <color name="B">#FF666666</color>
+    <color name="C">#FFffffff</color>
+    <color name="D">#00000000</color>
+    <color name="E">#00000000</color>
+    <color name="F">#00000000</color>
+    <color name="G">#fff600ff</color>
+
+
+    <color name="navigationBarColor">#3f75ec</color>
+    <color name="statusBarcolor">#3f75ec</color>
+    <color name="statusBarcolorDark">#3f75ec</color>
+    <color name="actionBarColor">#3f75ec</color>
+</resources>

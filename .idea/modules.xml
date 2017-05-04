@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/PageRecycleview.iml" filepath="$PROJECT_DIR$/PageRecycleview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pagerecycleview/pagerecycleview.iml" filepath="$PROJECT_DIR$/pagerecycleview/pagerecycleview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pagerecycleviewtest/pagerecycleviewtest.iml" filepath="$PROJECT_DIR$/pagerecycleviewtest/pagerecycleviewtest.iml" />
+    </modules>
+  </component>
+</project>

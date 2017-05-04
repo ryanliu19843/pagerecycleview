@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+     File created by the Android Action Bar Style Generator
+
+     Copyright (C) 2011 The Android Open Source Project
+     Copyright (C) 2012 readyState Software Ltd
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <dimen name="sp_linestrok_width">1px</dimen>
+    <dimen name="sp_linestrok">10px</dimen>
+    <dimen name="sp_circlystrok">10px</dimen>
+    <dimen name="sp_circly_width">40px</dimen>
+    <dimen name="sp_offsetY">1.5px</dimen>
+    <dimen name="sp_over_pull">200px</dimen>
+    <dimen name="sp_text_size">40px</dimen>
+    <dimen name="sp_month_ang">50px</dimen>
+
+
+    <color name="sp_background">@color/colorAccent</color>
+    <color name="sp_slinecolor">@color/colorPrimary</color>
+    <color name="sp_anmcolor">@color/colorPrimary</color>
+    <color name="sp_textcolor">@color/colorPrimaryDark</color>
+
+
+    <string name="sp_state_a">下拉刷新</string>
+    <string name="sp_state_b">松开刷新</string>
+    <string name="sp_state_c">正在刷新</string>
+    <string name="sp_state_d">刷新完成</string>
+
+
+    <string name="sp_loading">正在加载...</string>
+    <string name="sp_loading_nomore">没有更多</string>
+
+
+    <string name="page_nodate">暂无数据，点击重新加载</string>
+
+    <string name="click_reload">点击重新加载</string>
+
+</resources>

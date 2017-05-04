@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+     <string name="id_text">com.mdx.ryan.pagetest.item.Text</string>
+     <string name="id_group">com.mdx.ryan.pagetest.item.Group</string>
+</resources>
+
