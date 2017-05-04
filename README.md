@@ -1,6 +1,6 @@
 ## 功能介绍
 ### 为recycleview实现下拉刷新，分页加载，stickyhead效果，headview和footview功能，错误提示等功能
-### 重新adapter统一为cardadapter，使用更简介
+### 重新adapter统一为cardadapter，使用更简单
 ### 统一数据源，每一项为一个card，card类型与viewhold绑定编写更方便
 ### 修改viewhold的加载方式，使其与card的类型对应，用户无需处理bind和create的关系。
 
