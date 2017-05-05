@@ -8,7 +8,7 @@
 ## 实现效果
 
 #### 下拉刷新
-![图片](https://github.com/ryanliu19843/pagerecycleview/blob/it2d4b.gif)
+![图片](https://github.com/ryanliu19843/pagerecycleview/blob/master/it2d4b.gif)
 
 
 #### 错误处理
