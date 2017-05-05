@@ -6,8 +6,17 @@
 
 
 ## 实现效果
+
+#### 下拉刷新
+![图片](https://github.com/ryanliu19843/pagerecycleview/blob/it2d4b.gif)
+
+
+#### 错误处理
+![图片](https://github.com/ryanliu19843/pagerecycleview/blob/master/5QUfGT.gif)
+
  
-![图片](https://github.com/ryanliu19843/pagerecycleview/blob/master/ezgif-2-052447.gif)
+#### stickyhead
+![图片](https://github.com/ryanliu19843/pagerecycleview/blob/master/rpJSEe.gif)
 
 ## 实现代码
 ### 如果使用我实现的服务器数据交互框架实现方式如下
