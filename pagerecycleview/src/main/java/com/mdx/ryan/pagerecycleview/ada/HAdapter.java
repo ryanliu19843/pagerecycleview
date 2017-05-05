@@ -151,11 +151,11 @@ public class HAdapter extends MAdapter {
                 isruned = true;
             }
         }
-        if (position == headviews.size() + getIcount() + footviews.size() - 1 && !isruned) {
-            if (onLoadingLast != null) {
-                onLoadingLast.onLoadingLast(this, position);
-            }
-        }
+//        if (position == headviews.size() + getIcount() + footviews.size() - 1 && !isruned) {
+//            if (onLoadingLast != null) {
+//                onLoadingLast.onLoadingLast(this, position);
+//            }
+//        }
     }
 
     public static interface OnLoadingLast {

@@ -83,6 +83,7 @@ public class SwipRefreshLoadingView extends LinearLayout implements View.OnClick
     @Override
     public void onClick(View view) {
         if (mRecyclerView.onSwipLoadListener != null) {
+            mRecyclerView.onSwipLoadListener.setHavepage(true);
             mRecyclerView.onSwipLoadListener.onPageLoad();
         }
     }

@@ -16,6 +16,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:background="@color/colorPrimary"
             android:layout_height="wrap_content">
 
             <Button
@@ -30,27 +31,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="load error" />
+                android:text="load\n error" />
 
             <Button
                 android:id="@+id/group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="set group" />
+                android:text="set\n group" />
 
             <Button
                 android:id="@+id/clean"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="clean up" />
+                android:text="clean\n up" />
             <Button
                 android:id="@+id/haspage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="next page" />
+                android:text="next\n page" />
         </LinearLayout>
 
         <com.mdx.ryan.pagerecycleview.MFRecyclerView

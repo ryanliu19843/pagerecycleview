@@ -11,7 +11,7 @@ import com.mdx.ryan.pagerecycleview.ada.Card;
 import com.mdx.ryan.pagerecycleview.ada.CardAdapter;
 import com.mdx.ryan.pagetest.card.CardGroup;
 import com.mdx.ryan.pagetest.card.CardText;
-import com.mdx.ryan.pagerecycleview.widget.OnPageSwipListener;
+import com.mdx.ryan.pagerecycleview.widget.OnSyncPageSwipListener;
 import com.mdx.ryan.pagerecycleview.widget.SwipSyncTask;
 
 import java.util.ArrayList;
@@ -25,8 +25,9 @@ public class MainActivity extends AppCompatActivity {
     public Button clean;
     public MFRecyclerView recycleview;
     public SwipSyncTask swipSyncTask;
-    public OnPageSwipListener onPageSwipListener;
-    public boolean iserror = false, isgroup = false,ispage=false;
+    public OnSyncPageSwipListener onPageSwipListener;
+    public boolean  isgroup = false,ispage=false;
+    public int iserror = 0;
     public Button haspage;
 
     @Override
@@ -56,9 +57,11 @@ public class MainActivity extends AppCompatActivity {
                         list.add(card);
                     }
                 }
-                if (iserror) {
+                if (iserror==1) {
                     error = "加载错误";
                     return null;
+                }else if(iserror==2){
+                    error = "加载错误";
                 }
                 this.haspage=ispage;
                 return new CardAdapter(MainActivity.this, list);
@@ -69,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
-        onPageSwipListener = new OnPageSwipListener(swipSyncTask);
+        onPageSwipListener = new OnSyncPageSwipListener(swipSyncTask);
 
         recycleview.setOnSwipLoadListener(onPageSwipListener);
         recycleview.pullLoad();
@@ -84,11 +87,7 @@ public class MainActivity extends AppCompatActivity {
         error.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (iserror) {
-                    iserror = false;
-                } else {
-                    iserror = true;
-                }
+                iserror=(iserror+1)%3;
                 recycleview.pullLoad();
             }
         });

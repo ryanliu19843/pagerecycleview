@@ -8,11 +8,11 @@ import com.mdx.ryan.pagerecycleview.ada.CardAdapter;
 
 public abstract class SwipSyncTask {
 
-    public OnPageSwipListener onPageSwipListener;
+    public OnSyncPageSwipListener onPageSwipListener;
     public boolean haspage;
     public String error;
 
-    public void setOnPageSwipListener(OnPageSwipListener onPageSwipListener) {
+    public void setOnPageSwipListener(OnSyncPageSwipListener onPageSwipListener) {
         this.onPageSwipListener = onPageSwipListener;
     }
 

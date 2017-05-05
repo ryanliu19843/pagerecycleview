@@ -29,9 +29,6 @@ public class CardText extends Card<String> {
         item.set(posion, this);
         this.lastitem = null;
      }
-    
-    
-
 }
 
 

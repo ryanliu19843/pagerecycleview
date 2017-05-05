@@ -31,7 +31,7 @@
 
     <color name="sp_background">@color/colorAccent</color>
     <color name="sp_slinecolor">@color/colorPrimary</color>
-    <color name="sp_anmcolor">@color/colorPrimary</color>
+    <color name="sp_anmcolor">@color/colorPrimaryDark</color>
     <color name="sp_textcolor">@color/colorPrimaryDark</color>
 
 

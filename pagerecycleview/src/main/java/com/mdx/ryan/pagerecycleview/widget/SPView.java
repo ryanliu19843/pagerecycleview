@@ -29,7 +29,7 @@ public class SPView extends View implements SwipRefresh {
     //笑脸    0
     private int mouth = 2;
     public int state = 1, status = 0;
-    private int lcolor = 0xffffffff/*背景颜色*/, scolor = 0xffdcdcdc/*线条颜色*/, bcolor = 0xffff0000 /*动画颜色*/, tcolor = 0xffdcdcdc /*文字颜色*/;
+    public int lcolor = 0xffffffff/*背景颜色*/, scolor = 0xffdcdcdc/*线条颜色*/, bcolor = 0xffff0000 /*动画颜色*/, tcolor = 0xffdcdcdc /*文字颜色*/;
     private ObjectAnimator fobjectAnimator, robjectAnimator, eobjectAnimator;
     private long loadtime = 0;
     private float lineStrokWidth = 1 /*边线宽度*/, lineStroke = 10 /*移动线条宽度*/, circlyStroke = 10 /*圆的宽度*/, circlyw = 50/*园的半径*/, monthAng = 0, monthCirclyw = 0, offsetY = 0/*顶部偏移量*/, loffsetY = offsetY + circlyStroke / 4;
