@@ -46,7 +46,7 @@ public class MRecyclerView extends RecyclerView {
 
 
     public interface OnPullListener{
-        void onPullListener(float mv, float mt, int orientation, float over);
+        void onPullListener(float mv,float mt,int orientation,float over);
     }
 
 
@@ -121,6 +121,10 @@ public class MRecyclerView extends RecyclerView {
 
     public void setSwipPadding(int swipPadding) {
         swipRefreshView.setSwipPadding(swipPadding);
+    }
+
+    public SwipRefreshView getSwipRefreshView(){
+        return swipRefreshView;
     }
 
     public void setLoadingPadding(int loadingPadding) {
@@ -202,11 +206,11 @@ public class MRecyclerView extends RecyclerView {
     }
 
     public void endPage() {
-        if(this.onSwipLoadListener!=null) {
-            this.onSwipLoadListener.setHavepage(false);
-        }
         if (loadingshowType == 3) {
             showPage();
+        }
+        if(this.onSwipLoadListener!=null) {
+            this.onSwipLoadListener.setHavepage(false);
         }
         if (loadingshowType == 1) {
             this.setLoadingViewState(1, null);
@@ -515,5 +519,4 @@ public class MRecyclerView extends RecyclerView {
 
         void onPageLoad(int page);
     }
-
 }

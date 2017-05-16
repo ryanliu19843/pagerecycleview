@@ -14,8 +14,6 @@ import android.widget.RelativeLayout;
 
 import com.mdx.ryan.pagerecycleview.MRecyclerView;
 import com.mdx.ryan.pagerecycleview.R;
-import com.mdx.ryan.pagerecycleview.easeinterpolator.Ease;
-import com.mdx.ryan.pagerecycleview.easeinterpolator.EasingInterpolator;
 
 
 /**
@@ -33,6 +31,8 @@ public class SwipRefreshView extends RelativeLayout {
     private float minload = 300;
     private int state = SRV_STATE_PULL;
     public float overspeed = 0.5f, overslowS = 1f;
+
+
     private SwipRefresh swipRefresh;
     private int swipPadding = 0;
 
@@ -71,9 +71,9 @@ public class SwipRefreshView extends RelativeLayout {
 
     public void setSwipRefresh(SwipRefresh swipRefresh) {
         this.swipRefresh = swipRefresh;
-        if (swipRefresh instanceof View) {
-            this.swipRefresh.setOver(this.minload);
-            this.addView((View) swipRefresh, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, 2000));
+        this.swipRefresh.setOver(this.minload);
+        if (swipRefresh instanceof View ) {
+            this.addView((View) swipRefresh, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, 10000));
         }
     }
 
@@ -139,18 +139,21 @@ public class SwipRefreshView extends RelativeLayout {
     }
 
 
+    /**
+     * 设置下拉动画，当自动下拉刷新是播放
+     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void pullReload() {
         if (getState() != SRV_STATE_PULL) {
             return;
         }
-        swipRefresh.setLinw(0);
+        swipRefresh.startPullload();
         om = (getMinload() - mRecyclerView.mv) / 100;
         smv = mRecyclerView.mv;
         setState(SRV_STATE_REFI);
         if (animatorpull == null) {
-            animatorpull = ObjectAnimator.ofInt(this, "ss", 0, 100);
-            animatorpull.setDuration(300);
+            animatorpull = swipRefresh.getPullAnimator();
+//            animatorpull.setInterpolator(new EasingInterpolator(Ease.BOUNCE_OUT));
             animatorpull.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -170,15 +173,18 @@ public class SwipRefreshView extends RelativeLayout {
     }
 
 
+    /**
+     * 设置加载结束动画，当加载结束是播放的动画
+     * @param mv
+     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void setloadend(float mv) {
         om = mv / 100;
         smv = mv;
         setState(SRV_STATE_REFE);
         if (animatorend == null) {
-            animatorend = ObjectAnimator.ofInt(this, "ss", 0, 100);
-            animatorend.setDuration(300);
-//            animatorend.setInterpolator(new EasingInterpolator(Ease.BACK_IN));
+            animatorend = swipRefresh.getEndAnimator();
+//            animatorend.setInterpolator(new EasingInterpolator(Ease.BOUNCE_OUT));
             animatorend.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -207,6 +213,10 @@ public class SwipRefreshView extends RelativeLayout {
     }
 
 
+    /**
+     * 设置释放动画 当下拉释放后执行的动画
+     * @param mv
+     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void setRelease(float mv) {
         if (getMinload() <= mv && this.state != SRV_STATE_REFI) {
@@ -220,9 +230,7 @@ public class SwipRefreshView extends RelativeLayout {
 
         smv = mv;
         if (animator == null) {
-            animator = ObjectAnimator.ofInt(this, "ss", 0, 100);
-            animator.setDuration(450);
-            animator.setInterpolator(new EasingInterpolator(Ease.BOUNCE_OUT));
+            animator = swipRefresh.getAnimator();
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -257,5 +265,10 @@ public class SwipRefreshView extends RelativeLayout {
 
     public int getState() {
         return state;
+    }
+
+
+    public SwipRefresh getSwipRefresh() {
+        return swipRefresh;
     }
 }

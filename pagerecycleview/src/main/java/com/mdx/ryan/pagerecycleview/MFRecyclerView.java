@@ -200,20 +200,9 @@ public class MFRecyclerView extends FrameLayout {
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
-            int ind = parent.getChildAdapterPosition(child);
-            if (ind >= 0) {
-                RecyclerView.Adapter ada = parent.getAdapter();
-                if (ada instanceof MAdapter) {
-                    Object obj = ((MAdapter) ada).get(ind);
-                    if (obj instanceof Card) {
-                        Card c = (Card) obj;
-                        if (c.getViewHodeParam() == null || c.getViewHodeParam().showType == 0) {
-                            if (c.viewHold instanceof MViewHold) {
-                                ((MViewHold) (c.viewHold)).setXY(c.viewHold.itemView.getLeft(), c.viewHold.itemView.getTop());
-                            }
-                        }
-                    }
-                }
+            RecyclerView.ViewHolder viewh=parent.getChildViewHolder(child);
+            if (viewh instanceof MViewHold) {
+                ((MViewHold) viewh).setXY(viewh.itemView.getLeft(), viewh.itemView.getTop());
             }
         }
 

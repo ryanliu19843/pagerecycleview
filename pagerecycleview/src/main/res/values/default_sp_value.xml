@@ -20,9 +20,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <dimen name="sp_linestrok_width">1px</dimen>
-    <dimen name="sp_linestrok">10px</dimen>
-    <dimen name="sp_circlystrok">10px</dimen>
-    <dimen name="sp_circly_width">40px</dimen>
+    <dimen name="sp_circlystrok">5px</dimen>
+    <dimen name="sp_circly_width">35px</dimen>
     <dimen name="sp_offsetY">1.5px</dimen>
     <dimen name="sp_over_pull">200px</dimen>
     <dimen name="sp_text_size">40px</dimen>

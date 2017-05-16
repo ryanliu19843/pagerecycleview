@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -17,6 +18,8 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 
 import com.mdx.ryan.pagerecycleview.R;
+import com.mdx.ryan.pagerecycleview.easeinterpolator.Ease;
+import com.mdx.ryan.pagerecycleview.easeinterpolator.EasingInterpolator;
 
 
 /**
@@ -32,10 +35,10 @@ public class SPView extends View implements SwipRefresh {
     public int lcolor = 0xffffffff/*背景颜色*/, scolor = 0xffdcdcdc/*线条颜色*/, bcolor = 0xffff0000 /*动画颜色*/, tcolor = 0xffdcdcdc /*文字颜色*/;
     private ObjectAnimator fobjectAnimator, robjectAnimator, eobjectAnimator;
     private long loadtime = 0;
-    private float lineStrokWidth = 1 /*边线宽度*/, lineStroke = 10 /*移动线条宽度*/, circlyStroke = 10 /*圆的宽度*/, circlyw = 50/*园的半径*/, monthAng = 0, monthCirclyw = 0, offsetY = 0/*顶部偏移量*/, loffsetY = offsetY + circlyStroke / 4;
+    private float lineStrokWidth = 1 /*边线宽度*/, circlyStroke = 10 /*圆的宽度*/, circlyw = 50/*园的半径*/, monthAng = 0, monthCirclyw = 0, offsetY = 0/*顶部偏移量*/, loffsetY = offsetY + circlyStroke;
     private float loadC = 0/*线条长度*/, circlyAng = 0 /*圆角度*/, lineW = 0/*当前线长度*/, over = 300/*超出高度*/, barH/*滑动高度*/, barT/*触摸位置*/, textSize = 50/*文字大小*/;
     private String state_a, state_b, state_c, state_d;
-    public static Bitmap bitmap,topbitmap,allbitmap;
+    public static Bitmap bitmap, topbitmap, allbitmap;
 
     public SPView(Context context) {
         super(context);
@@ -61,14 +64,14 @@ public class SPView extends View implements SwipRefresh {
     public void init(Context context) {
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
+        mPaint.setDither(true);
         mPath = new Path();
 
         lineStrokWidth = context.getResources().getDimension(R.dimen.sp_linestrok_width);
-        lineStroke = context.getResources().getDimension(R.dimen.sp_linestrok);
         circlyStroke = context.getResources().getDimension(R.dimen.sp_circlystrok);
         circlyw = context.getResources().getDimension(R.dimen.sp_circly_width);
         offsetY = context.getResources().getDimension(R.dimen.sp_offsetY);
-        loffsetY = offsetY + circlyStroke / 4;
+        loffsetY = offsetY + circlyStroke / 2;
         textSize = context.getResources().getDimension(R.dimen.sp_text_size);
         over = context.getResources().getDimension(R.dimen.sp_over_pull);
         monthCirclyw = circlyw / 5f * 3f;
@@ -85,12 +88,15 @@ public class SPView extends View implements SwipRefresh {
         state_d = context.getString(R.string.sp_state_d);
         if (bitmap == null) {
             bitmap = ((BitmapDrawable) context.getResources().getDrawable(R.mipmap.fw_pull_down_n)).getBitmap();
-            topbitmap=((BitmapDrawable) context.getResources().getDrawable(R.mipmap.fw_pull_top_n)).getBitmap();
-            allbitmap=((BitmapDrawable) context.getResources().getDrawable(R.mipmap.fw_pull_all_n)).getBitmap();
+            topbitmap = ((BitmapDrawable) context.getResources().getDrawable(R.mipmap.fw_pull_top_n)).getBitmap();
+            allbitmap = ((BitmapDrawable) context.getResources().getDrawable(R.mipmap.fw_pull_all_n)).getBitmap();
         }
     }
 
 
+    /**
+     * 刷新完成
+     */
     public void loadComplit() {
         if (fobjectAnimator != null) {
             fobjectAnimator.cancel();
@@ -103,6 +109,12 @@ public class SPView extends View implements SwipRefresh {
         endAmin();
     }
 
+
+    /**
+     * 设置当前高度和手指位置
+     * @param mv
+     * @param mt
+     */
     @Override
     public void setH(float mv, float mt) {
         this.barH = mv;
@@ -110,6 +122,11 @@ public class SPView extends View implements SwipRefresh {
         invalidate();
     }
 
+    /**
+     * 设置当前宽度和手指位置
+     * @param mv
+     * @param mt
+     */
     @Override
     public void setW(float mv, float mt) {
         this.barH = mv;
@@ -117,12 +134,16 @@ public class SPView extends View implements SwipRefresh {
         invalidate();
     }
 
+    /**
+     * 设置当前状态
+     * @param state
+     */
     @Override
     public void setState(int state) {
-        if (state == SwipRefreshView.SRV_STATE_REFI && this.state != SwipRefreshView.SRV_STATE_REFI) {
+        if (state == SwipRefreshView.SRV_STATE_REFI && this.state != SwipRefreshView.SRV_STATE_REFI) {   //第一次进入正在刷新
             loadtime = System.currentTimeMillis();
-            startAmin();
-        } else if (state == SwipRefreshView.SRV_STATE_REFE) {
+            startAmin(); //播放正在刷新动画
+        } else if (state == SwipRefreshView.SRV_STATE_REFE && this.state != SwipRefreshView.SRV_STATE_REFE) {   //刷新完成，第一次进入刷新完成
             loadComplit();
         }
         this.state = state;
@@ -141,12 +162,48 @@ public class SPView extends View implements SwipRefresh {
     }
 
     @Override
-    public void setLinw(float over) {
-        lineW = over;
+    public void startPullload() {
+        lineW = 0;
+    }
+
+    /**
+     * 设置下拉动画，当自动下拉刷新是播放
+     * @return
+     */
+    @Override
+    public ObjectAnimator getPullAnimator() {
+        ObjectAnimator retn = ObjectAnimator.ofInt(this, "ss", 0, 100);
+        retn.setDuration(300);
+        return retn;
+    }
+
+    /**
+     * 设置加载结束动画，当加载结束是播放的动画
+     * @return
+     */
+    @Override
+    public ObjectAnimator getEndAnimator() {
+        ObjectAnimator retn =ObjectAnimator.ofInt(this, "ss", 0, 100);
+        retn.setDuration(450);
+        return retn;
+    }
+
+    /**
+     * 设置释放动画 当下拉释放后执行的动画
+     * @return
+     */
+    @Override
+    public ObjectAnimator getAnimator() {
+        ObjectAnimator retn =ObjectAnimator.ofInt(this, "ss", 0, 100);
+        retn.setDuration(450);
+        retn.setInterpolator(new EasingInterpolator(Ease.BOUNCE_OUT));
+        return retn;
     }
 
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
+
         int w = getWidth();
         mPath.reset();
         mPaint.setAlpha(255);
@@ -154,10 +211,11 @@ public class SPView extends View implements SwipRefresh {
         mPaint.setStrokeWidth(lineStrokWidth);  //设置线条宽度
         mPaint.setColor(lcolor);   //设置背景颜色
 
-        float bith=(w * 1f) / topbitmap.getWidth() * topbitmap.getHeight();
-        float nowh=barH-bith;
 
-        float bitah=(w * 1f) / topbitmap.getWidth() * topbitmap.getHeight();
+        float bith = (w * 1f) / topbitmap.getWidth() * topbitmap.getHeight();
+        float nowh = barH - bith;
+
+        float bitah = (w * 1f) / topbitmap.getWidth() * topbitmap.getHeight();
 
         canvas.drawBitmap(allbitmap, new Rect(0, 0, allbitmap.getWidth(), allbitmap.getHeight()), new Rect(0, (int) (over), w, (int) (over + (w * 1f) / allbitmap.getWidth() * allbitmap.getHeight())), mPaint);
 
@@ -170,19 +228,15 @@ public class SPView extends View implements SwipRefresh {
             //画下边的边
             mPaint.setColor(scolor);
 
+            canvas.drawBitmap(topbitmap, new Rect(0, 0, topbitmap.getWidth(), topbitmap.getHeight()), new Rect(0, (int) nowh, w, (int) (nowh + bith)), mPaint);
 
-
-
-
-            canvas.drawBitmap(topbitmap, new Rect(0, 0, topbitmap.getWidth(), topbitmap.getHeight()), new Rect(0, (int)nowh, w, (int) (nowh + bith)), mPaint);
-
-            canvas.drawLine(0, barH - lineStrokWidth, getWidth(), barH, mPaint);
+            canvas.drawLine(0, barH - circlyStroke, getWidth(), barH, mPaint);
         } else {
             //画上部分背景
             canvas.drawRect(0, 0, getWidth(), over, mPaint);
 
-            nowh=over-bith;
-            canvas.drawBitmap(topbitmap, new Rect(0, 0, topbitmap.getWidth(), topbitmap.getHeight()), new Rect(0, (int)nowh, w, (int) (nowh + bith)), mPaint);
+            nowh = over - bith;
+            canvas.drawBitmap(topbitmap, new Rect(0, 0, topbitmap.getWidth(), topbitmap.getHeight()), new Rect(0, (int) nowh, w, (int) (nowh + bith)), mPaint);
 
             //画背景色
             mPaint.setColor(lcolor);
@@ -250,7 +304,8 @@ public class SPView extends View implements SwipRefresh {
 
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(bcolor);  //设置动画颜色
-        mPaint.setStrokeWidth(lineStroke / 2);
+        mPaint.setStrokeWidth(circlyStroke);
+
         if (state == SwipRefreshView.SRV_STATE_PULL || state == SwipRefreshView.SRV_STATE_RELR) {
             lineW = getWidth() - ((getWidth() / 4f * 3f) / (over * 1f)) * barH;
             if (barH > 0 && barH <= over) {
@@ -271,15 +326,15 @@ public class SPView extends View implements SwipRefresh {
             float nw = loadC > w ? w : loadC;
             lineW = nw;
             if (sw < nw) {
-                mPaint.setStrokeWidth(circlyStroke / 2);
-                canvas.drawLine(sw < 0 ? 0 : sw, loffsetY, nw, loffsetY, mPaint);
+                mPaint.setStrokeWidth(circlyStroke);
+                canvas.drawLine(sw < 0 ? 0 : sw, loffsetY, nw + 1, loffsetY, mPaint);
             }
             mPaint.setStrokeWidth(circlyStroke);
 
             if (sw > 0) {
-                getArc(canvas, w, circlyw + offsetY, circlyw, -90, (loadC - w), mPaint);
+                getArc(canvas, w, circlyw + offsetY, circlyw, -90, (loadC - w), mPaint, circlyStroke);
                 if (mouth == 2) {
-                    getArc(canvas, w, circlyw + offsetY, monthCirclyw, -90 + (145 / 340f) * (loadC - w), 70 / 340f * (loadC - w), mPaint);
+                    getArc(canvas, w, circlyw + offsetY, monthCirclyw, -90 + (145 / 340f) * (loadC - w), 70 / 340f * (loadC - w), mPaint, circlyStroke);
                 }
             }
         }
@@ -292,7 +347,7 @@ public class SPView extends View implements SwipRefresh {
             }
 
             w = w / 2;
-            getArc(canvas, w, circlyw + offsetY, circlyw, -90 + circlyAng, 340f, mPaint);
+            getArc(canvas, w, circlyw + offsetY, circlyw, -90 + circlyAng, 340f, mPaint, circlyStroke);
 
 
             mPaint.setStyle(Paint.Style.STROKE);
@@ -300,22 +355,16 @@ public class SPView extends View implements SwipRefresh {
             if (mouth == 0) {
                 mPaint.setStrokeWidth(circlyStroke);
                 float lw = circlyw + offsetY + monthCirclyw * 2 - monthCirclyw / 4;
-                getArc(canvas, w, lw, monthCirclyw, -90 - monthAng / 2, monthAng, mPaint);
+                getArc(canvas, w, lw, monthCirclyw, -90 - monthAng / 2, monthAng, mPaint, circlyStroke);
             } else if (mouth == 1) {
-                mPaint.setStrokeWidth(circlyStroke / 2);
+                mPaint.setStrokeWidth(circlyStroke);
                 float lw = offsetY - monthCirclyw + circlyw * 2 + monthCirclyw / 4;
                 canvas.drawLine(w - monthAng / 5, lw, w + monthAng / 5, lw, mPaint);
             } else if (mouth == 2) {
-                mPaint.setStrokeWidth(circlyStroke);
-                getArc(canvas, w, circlyw + offsetY, monthCirclyw, 90 - monthAng / 2, monthAng, mPaint);
+                getArc(canvas, w, circlyw + offsetY, monthCirclyw, 90 - monthAng / 2, monthAng, mPaint, circlyStroke);
             }
         }
     }
-
-    private void showbitmap(Canvas canvas,Bitmap bitmap,Paint paint,float top,float left,int type){
-
-    }
-
 
     private boolean isinit = false;
 
@@ -393,17 +442,14 @@ public class SPView extends View implements SwipRefresh {
     }
 
 
-    public void getArc(Canvas canvas, float o_x, float o_y, float r, float startangel, float angel, Paint paint) {
-        canvas.save();
-        RectF rect = new RectF(o_x - r, o_y - r, o_x + r, o_y + r);
-        Path path = new Path();
-        path.moveTo(o_x, o_y);
-        float endangel = startangel + angel;
-        path.lineTo((float) (o_x + r * Math.cos(startangel * Math.PI / 180)), (float) (o_y + r * Math.sin(startangel * Math.PI / 180)));
-        path.lineTo((float) (o_x + r * Math.cos(endangel * Math.PI / 180)), (float) (o_y + r * Math.sin(endangel * Math.PI / 180)));
-        path.addArc(rect, startangel, angel);
-        canvas.clipPath(path);
-        canvas.drawCircle(o_x, o_y, r, paint);
-        canvas.restore();
+    public void getArc(Canvas canvas, float o_x, float o_y, float r, float startangel, float angel, Paint paint, float width) {
+        mPaint.setStrokeWidth(width);
+        RectF oval = new RectF();                     //RectF对象
+        float fs = r - width / 2;
+        oval.left = o_x - fs;                              //左边
+        oval.top = o_y - fs;                                   //上边
+        oval.right = o_x + fs;                             //右边
+        oval.bottom = o_y + fs;                                //下边
+        canvas.drawArc(oval, startangel, angel, false, paint);    //绘制圆弧
     }
 }
